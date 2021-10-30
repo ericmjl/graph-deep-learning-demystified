@@ -1,0 +1,314 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>An Attempt at Demystifying Graph Deep Learning</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/reset.min.css" integrity="sha512-Mjxkx+r7O/OLQeKeIBCQ2yspG1P5muhAtv/J+p2/aPnSenciZWm5Wlnt+NOUNA4SHbnBIE/R2ic0ZBiCXdQNUg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/reveal.min.css" integrity="sha512-zu0eodDPCBAZf1vnIgwZ6qchMBt1xqgGkS9vBjVmunoH8pU7cc9OQKBiSQCclpvqySupy9Y1pLZc87VB40G4Sw==" crossorigin="anonymous" />
+    <!-- Theme -->
+    <link rel="stylesheet" href="css/nord.css">
+
+    <!-- Customizations -->
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Timeline -->
+    <link rel="stylesheet" href="css/timeline.css">
+
+    <!-- Carousel CSS -->
+    <link rel="stylesheet" href="css/carousel.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/highlight/monokai.min.css" integrity="sha512-z8wQkuDRFwCBfoj7KOiu1MECaRVoXx6rZQWL21x0BsVVH7JkqCp1Otf39qve6CrCycOOL5o9vgfII5Smds23rg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/theme/fonts/source-sans-pro/source-sans-pro.min.css" integrity="sha512-3Xywo2OI5FqQh0A8U4NwmEYP15dM8LQ33MLqNqTwxYfurqQ5Mx+eYfjKO6QAkS0dPUSp6Q/S7e7c+8qZF6s9Lw==" crossorigin="anonymous"
+    />
+</head>
+
+<body>
+    <div class="line top"></div>
+    <div class="line bottom"></div>
+    <div class="line left"></div>
+    <div class="line right"></div>
+
+    <div class="reveal">
+        <div class="slides">
+            <section id="title-slide">
+                <h1>An Attempt at Demystifying Graph Deep Learning</h1>
+                <div class="container">
+                    <a href="https://ericmjl.github.io/" class="col">Eric J. Ma</a>
+                </div>
+                <p>https://<span style="color: #BF616A">ericmjl</span>.github.io/<span style="color: #BF616A">graph</span>-<span style="color: #5E81AC">deep</span>-<span style="color: #BF616A">learning</span>-<span style="color: #5E81AC">demystified</span>/</p>
+            </section>
+            <section id="intro-to-myself">
+                <section id="about-myself-title">
+                    <h2>A bit about myself</h2>
+                </section>
+                <section data-background-color="#D8DEE9" id="professional-timeline">
+                    <h3>Professional History</h3>
+                    <div class="timeline">
+                        <div class="timeline-container right">
+                            <div class="timeline-content">
+                                <h4>2021-</h4>
+                                <small>Principal Data Scientist (Research), Moderna Therapeutics</small>
+                            </div>
+                        </div>
+                        <div class="timeline-container left fragment">
+                            <div class="timeline-content">
+                                <h4>2017-2021</h4>
+                                <small>Investigator, Novartis Institutes for BioMedical Research</small>
+                            </div>
+                        </div>
+                        <div class="timeline-container right fragment">
+                            <div class="timeline-content">
+                                <h4>2011-2017</h4>
+                                <small>MIT Biological Engineering, Doctor of Science</small>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="fragment">I accelerate science to the speed of thought using deep learning, Bayesian statistics, and network science as my main toolkits.</p>
+                </section>
+            </section>
+            <section id="wassup-equations">
+                <div class="container">
+                    <div class="col">
+                        <blockquote align="left" class="twitter-tweet">
+                            <p lang="en" dir="ltr">The Hype of Deep Learning:
+                                <br>1. Write a post with ML, AI or GAN in the title.
+                                <br>2. post appears at the top of hackernews (despite your best efforts)
+                                <br>3. HN drives tens of thousands of clicks
+                                <br>4. &quot;what&#39;s with all the maths? show me pretty pics&quot;
+                                <br>5. &lt;=1% stay for longer than a minute
+                            </p>&mdash; Ferenc Huszár (@fhuszar)
+                            <a href="https://twitter.com/fhuszar/status/933682386713350145?ref_src=twsrc%5Etfw">November 23, 2017</a>
+                        </blockquote>
+                        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </div>
+                    <div class="col fragment" style="align-items: center; display: flex;">
+                        <p>
+                            <b>I'm out to solve Point #4.</b>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section id="intro-to-graphs">
+                <section>
+                    <h2>Let's talk about graphs</h2>
+                </section>
+                <section data-auto-animate>
+                    <p>When you think of graphs, think networks❗️</p>
+                    <img class="explode" src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig1-graphs.png">
+                </section>
+                <section data-auto-animate>
+                    <p>All of deep learning operates on arrays.</p>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig1-graphs.png">
+                    <p class="fragment">How do we represent graphs as arrays?</p>
+                </section>
+                <section>
+                    <h3>Let's look at an <em>minimally complex anchoring example</em>.</h3>
+                </section>
+                <section data-auto-animate>
+                    <p>Here is a molecule, represented as a graph.</p>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig2-ethanoic-acid.png">
+                </section>
+                <section data-auto-animate>
+                    <p>Here is the same molecule, with numerical properties.</p>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig3-ethanoic-acid-features.png">
+                </section>
+                <section data-auto-animate>
+                    <p>The table on the right is the node feature matrix.</p>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig3-ethanoic-acid-features.png">
+                </section>
+                <section>
+                    <p>We know how to represent nodes as arrays.</p>
+                    <p class="fragment">What about edges?</p>
+                </section>
+                <section data-auto-animate>
+                    <p>The adjacency matrix lets us represent edges.</p>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig4-ethanoic-acid-adjacency.png">
+                </section>
+                <section data-auto-animate>
+                    <p>This adjacency matrix shows 1️⃣s anywhere an edge exists.</p>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig4-ethanoic-acid-adjacency.png">
+                    <p>
+                        <small><em>Matrix is symmetric b/c graph is undirected!</em></small>
+                    </p>
+                </section>
+                <section data-auto-animate>
+                    <p>This adjacency matrix shows the number of bonds between atoms.</p>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig5-ethanoic-acid-weighted-adjacency.png">
+                </section>
+                <section>
+                    <h3>Summary</h3>
+                    <ul>
+                        <li>Nodes can be represented in a <em>node feature matrix</em>.</li>
+                        <li>Edges can be represented in an <em>adjacency matrix</em>.</li>
+                    </ul>
+                    <p>Those two matrices, together, give a numerical representation of the graph.</p>
+                </section>
+            </section>
+            <section id="intro-to-message-passing">
+                <section>
+                    <h2>Let's talk about message passing</h2>
+                </section>
+                <section data-auto-animate>
+                    <p>Message passing on graphs is nothing more than dot products of matrices.</p>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig6-message-passing-chain.png">
+                    <small>Please ignore the fact that a transpose is necessary to make this work.</small>
+                </section>
+                <section data-auto-animate>
+                    <p>Message passing on graphs is nothing more than dot products of matrices.</p>
+                    <pre><code data-trim class="python grow">
+import jax.numpy as np
+
+def message_passing(A, F):
+    return np.dot(A, F)
+                    </code></pre>
+                </section>
+                <section>
+                    <div >
+                        <img class="hoverup-25"src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig7-message-passing-ethanoic-acid.png">
+                    </div>
+                </section>
+            </section>
+
+            <section id="message-passing-neural-nets">
+                <section>
+                    <h2>So how do we connect message passing to neural networks?</h2>
+                </section>
+                <section>
+                    <p>We can take the result of message passing and feed them through neural network operations.</p>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig9-message-passing-layer.png">
+                </section>
+                <section>
+                    <p>Sometimes, we need an operation to summarize nodes.</p>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig10-graph-summary-layer.png">
+                </section>
+                <section>
+                    <p>Putting everything together...</p>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig11-gnn-anatomy.png">
+                    <p><em>And that, my friends, is graph deep learning demystified!</em></p>
+                </section>
+                <section>
+                    <pre><code class="python">
+A = np.array(...) # some NumPy array
+F = np.array(...) # some NumPy array
+G = (A, F)
+
+def mp(G):
+    A, F = G
+    Z = np.dot(A, F)
+    return (A, Z)
+
+def graph_summary(G):
+    _, F = G
+    return np.sum(F, axis=0)
+
+def gnn_feedforward(params, G):
+    _, F = G
+    w, b = params
+    return relu(np.dot(F, w) + b)
+
+def feedforward(params, x):
+    w, b = params
+    return relu(np.dot(x, w) + b)
+
+def model(params, G):
+    G = mp(G)
+    G = gnn_feedforward(G, params["gnn"])
+    g = graph_summary(G)
+    return feedforward(params["ff"], g)
+                    </code></pre>
+                </section>
+            </section>
+
+            <section id="bonus-connection-convolutions">
+                <section>
+                    <h2>Bonus fact!</h2>
+                </section>
+                <section>
+                    <p>Regular convlution operations look a ton like message passing!</p>
+                </section>
+                <section>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig12-grid-convolution.png">
+                    <img class="fragment" src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig13-graph-convolution.png">
+                </section>
+            </section>
+
+            <section id="when-to-use-what">
+                <section>
+                    <h2>When do we use what types of neural networks?</h2>
+                </section>
+                <section>
+                    <img src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig8-inductive-biases.png">
+                    <small>Your <em>inductive biases</em> should be encoded in the model.</small>
+                </section>
+            </section>
+            <section id="summary">
+                <section>
+                    <h2>Summary</h2>
+                </section>
+                <section>
+                    <h3>Graphs can be represented as matrices.</h3>
+                    <div class="container">
+                        <div class="col">
+                            <p>Node Feature Matrix</p>
+                            <img class="explode" src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig3-ethanoic-acid-features.png">
+                        </div>
+                        <div class="col">
+                            <p>Adjacency Matrix</p>
+                            <img  class="explode" src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig4-ethanoic-acid-adjacency.png">
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h3>Graph deep learning is anchored on message passing.</h3>
+                    <img class="grow" src="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets-figures/fig11-gnn-anatomy.png">
+                </section>
+                <section>
+                    <h3>Learn More!</h3>
+                    <ul>
+                        <li><a href="https://ericmjl.github.io/essays-on-data-science/machine-learning/graph-nets/">An attempt at demystifying graph deep learning</a></li>
+                        <li><a href="https://distill.pub/2021/gnn-intro/">A Gentle Introduction to Graph Neural Networks</a></li>
+                        <li><a href="https://distill.pub/2021/understanding-gnns/">Understanding Convolutions on Graphs</a></li>
+                        <li><a href="https://github.com/GRAND-Lab/Awesome-Graph-Neural-Networks">Awesome Graph Neural Networks</a></li>
+                    </ul>
+                </section>
+            </section>
+            <section id="thank-you">
+                <section>
+                    <h2>Thank you!</h2>
+                </section>
+            </section>
+        </div>
+    </div>
+
+    <!-- Carousel JS -->
+    <script src="js/carousel.js"></script>
+
+    <!-- <script src="dist/reveal.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/reveal.min.js" integrity="sha512-Xu/cezKABTI81MGnaBm64vdiS7XkttHeYGOgr2Mdga0bTplSBGongLq2lhK2HwL79wefKM0u4uTCLD0ha1sRzQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/notes/notes.min.js" integrity="sha512-FYeeQscKqibmYKr0+nE2+fN5prBsFwgjsBVwkrA88O6mN2+ai6EvRkSi6txuhXlWsyK1MUfoV+94+q6HLouJSQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/markdown/markdown.min.js" integrity="sha512-eZZqO4ECmVvGhCt+6VZ7ian2bCu4S6yrjSFH9fXLY1zTokpAWsxAxQwM4x6+7G+G4ha5tFIe0jY0XjpBUqS49Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/highlight/highlight.min.js" integrity="sha512-NA5UCab7xDKQPXGsmIp8iEuId5BAKGPiqHZsZQcBuySfp1n3dZrwBDKpPNL23Db5upay1nULxU14JV1ggFOD2A==" crossorigin="anonymous"></script>
+    <script>
+        // More info about initialization & config:
+        // - https://revealjs.com/initialization/
+        // - https://revealjs.com/config/
+        Reveal.initialize({
+            // https://medium.com/myplanet-musings/building-a-responsive-reveal-js-theme-399179632cc6
+            width: "100%",
+            height: "100%",
+            margin: 0.2,
+            minScale: 1,
+            maxScale: 1,
+            hash: true,
+            // Learn about plugins: https://revealjs.com/plugins/
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+        });
+    </script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"crossorigin="anonymous"></script> -->
+</body>
+
+</html>

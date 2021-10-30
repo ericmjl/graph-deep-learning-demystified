@@ -1,0 +1,89 @@
+/* https://css-tricks.com/snippets/css/scale-on-hover-with-webkit-transition/ */
+
+.grow {
+    transition: all .2s ease-in-out;
+}
+
+.grow:hover {
+    transform: scale(1.1);
+}
+
+.explode {
+    transition: all .2s ease-in-out;
+}
+
+.explode:hover {
+    transform: scale(1.5);
+}
+
+
+/*
+Taken from: https://stackoverflow.com/questions/30861845/how-to-use-two-column-layout-with-reveal-js
+*/
+
+.container {
+    display: flex;
+    max-width: 90%;
+    margin: auto;
+    justify-content: center;
+}
+
+.card {
+    padding: 20px;
+    border-style: solid;
+    border-width: 5px;
+    border-color: white;
+    border-radius: 10px;
+}
+
+.bg-teal {
+    background-color: #88C0D0;
+}
+
+.bg-green {
+    background-color: #A3BE8C;
+}
+
+.bg-yellow {
+    background-color: #EBCB8B;
+}
+
+.bg-blue {
+    background-color: #88C0D0;
+}
+
+.col {
+    flex: 1;
+}
+
+.text-left {
+    text-align: left;
+}
+
+
+/* .reveal {
+    background-color: #D8DEE9;
+} */
+
+img.headshot {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+}
+
+img.width-25 {
+    width: 25%;
+}
+
+img.width-50 {
+    width: 50%;
+}
+
+img.hoverup-25:hover {
+    transform: translate(0, -25%);
+    transition-duration: 2s;
+}
+
+img.hoverup-25 {
+    transition-duration: 2s;
+}
